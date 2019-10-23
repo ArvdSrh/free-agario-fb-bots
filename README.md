@@ -1,5 +1,5 @@
 # free-agario-bots
-Free open source agar.io facebook bots
+Free open source agar.io facebook bots, normal and proxy version!
 
 ## Discord
 1. [200bots.ga](http://200bots.ga)
