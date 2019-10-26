@@ -13,19 +13,19 @@
 window.options = {
     settings: {
         "EXTENDED_ZOOM": {
-           "text": "Extended Zoom",
-          "type": "checkbox",
-          "value": true
+            "text": "Extended Zoom",
+            "type": "checkbox",
+            "value": true
         },
         "DRAW_MAP_GRID": {
-           "text": "Grid",
-          "type": "checkbox",
-          "value": false
+            "text": "Grid",
+            "type": "checkbox",
+            "value": false
         },
         "SHOW_ALL_PLAYERS_MASS": {
-           "text": "Show Mass (All players)",
-          "type": "checkbox",
-          "value": true
+            "text": "Show Mass (All players)",
+            "type": "checkbox",
+            "value": true
         },
     },
     hotkeys: {
@@ -61,8 +61,8 @@ window.options = {
         },
     }
 }
-if(localStorage.getItem('nebula-hotkeys')) window.options.hotkeys =JSON.parse(localStorage.getItem('nebula-hotkeys'));
-if(localStorage.getItem('nebula-settings')) window.options.settings =JSON.parse(localStorage.getItem('nebula-settings'));
+if (localStorage.getItem('nebula-hotkeys')) window.options.hotkeys = JSON.parse(localStorage.getItem('nebula-hotkeys'));
+if (localStorage.getItem('nebula-settings')) window.options.settings = JSON.parse(localStorage.getItem('nebula-settings'));
 window.changeKey = (name, event) => {
     event.preventDefault();
     $(`#${name}`).val(event.key.toLocaleUpperCase())
@@ -78,10 +78,10 @@ window.checkboxChange = (name) => {
     localStorage.setItem('nebula-settings', JSON.stringify(window.options.settings));
 };
 window.checkDuplicates = (keyname, keycode) => {
-for (var name in window.options.hotkeys) {
+    for (var name in window.options.hotkeys) {
         var key = window.options.hotkeys[name];
-        if(name == keyname) continue;
-    if(keycode == key.keycode) key.keycode = 0, key.key = "", $(`#${name}`).val("");
+        if (name == keyname) continue;
+        if (keycode == key.keycode) key.keycode = 0, key.key = "", $(`#${name}`).val("");
     }
 }
 window.setUpHotkeys = () => {
@@ -96,7 +96,7 @@ window.setUpHotkeys = () => {
     }
 }
 window.getOption = (name) => {
-    if(document.getElementById(name))return document.getElementById(name).checked
+    if (document.getElementById(name)) return document.getElementById(name).checked
     else return false
 }
 window.setUpOptions = () => {
@@ -109,7 +109,7 @@ window.setUpOptions = () => {
                     </div>
 `
         $("#settings").append(html);
-        if(option["value"] == true) $(`#${name}`).click();
+        if (option["value"] == true) $(`#${name}`).click();
     }
 }
 
@@ -149,23 +149,23 @@ class Writer {
 
 window.buffers = {
     startBots(url, protocolVersion, clientVersion, userStatus, botsName, botsAmount) {
-            const writer = new Writer(13 + url.length + botsName.length)
-            writer.writeUint8(0)
-            writer.writeString(url)
-            writer.writeUint32(protocolVersion)
-            writer.writeUint32(clientVersion)
-            writer.writeUint8(Number(userStatus))
-            writer.writeString(botsName)
-            writer.writeUint8(botsAmount)
-            return writer.dataView.buffer
-        },
-        mousePosition(x, y) {
-            const writer = new Writer(9)
-            writer.writeUint8(6)
-            writer.writeInt32(x)
-            writer.writeInt32(y)
-            return writer.dataView.buffer
-        }
+        const writer = new Writer(13 + url.length + botsName.length)
+        writer.writeUint8(0)
+        writer.writeString(url)
+        writer.writeUint32(protocolVersion)
+        writer.writeUint32(clientVersion)
+        writer.writeUint8(Number(userStatus))
+        writer.writeString(botsName)
+        writer.writeUint8(botsAmount)
+        return writer.dataView.buffer
+    },
+    mousePosition(x, y) {
+        const writer = new Writer(9)
+        writer.writeUint8(6)
+        writer.writeInt32(x)
+        writer.writeInt32(y)
+        return writer.dataView.buffer
+    }
 }
 
 window.connection = {
@@ -216,12 +216,12 @@ window.connection = {
             case 3:
                 alert('Your IP has captcha and bots are unable to spawn, change your ip with a VPN or something to one that doesn\'t has captcha in order to use the bots')
                 break
-             case 4:
-                 //Connected Bot count = getUint8(1)
+            case 4:
+                //Connected Bot count = getUint8(1)
                 //Spawned Bot count = getUint8(2)
                 //Server player amount = getUint8(3)
                 $('#botCount').html(`${dataView.getUint8(1)}/${dataView.getUint8(2)}/${window.bots.amount}`)
-               // $('#slots').html(dataView.getUint8(3) + "/200")
+                // $('#slots').html(dataView.getUint8(3) + "/200")
                 break;
             case 5:
                 $('#slots').html(dataView.getUint8(1) + "/200")
@@ -375,10 +375,20 @@ function setGUI() {
                           </div>
         </div>`
     $("#mainui-play").append(menuhtml);
+    document.getElementById('mainui-features').innerHTML = `
+<center><button id="rbutton">Donate Token</button>
+<h3 id="botsInfo">Alert&#9940;: If you have 1 Facebook Token, you only will get 1 Facebook Bot!</h3>
+<h3 id="botsInfo">Discord Servers&#128226;</h3>
+        <h5 id="botsAuthor">
+            <a href="http://200bots.ga" target="_blank">200bots.ga, </a><a href="https://discord.gg/MpzBaMa" target="_blank">Free Agar.io Bots</a>
+        </h5>
+<h5 id="botsAuthor"><a href="https://youtu.be/qnFnkmkh2VQ" target="_blank">&#128073;Tutorial Vid&#128072;</a></h5>
+</center>
+`
     document.getElementById('advertisement').innerHTML = `
 <button id="botsPanel">Options</button>
         <h3 id="botsInfo">
-            <a href="https://discord.gg/SDMNEcJ" target="_blank">Free Agar.io Bots</a>
+            <a>Free Agar.io Bots</a>
         </h3>
         <h5 id="botsAuthor">
             Developed by <a href="https://www.youtube.com/channel/UCZo9WmnFPWw38q65Llu5Lug" target="_blank">Nel, </a><a href="https://github.com/xN3BULA" target="_blank">xN3BULA, </a><a href="http://legendmod.ml/" target="_blank">Jimboy3100</a>
@@ -404,13 +414,13 @@ function setGUI() {
         window.bots.amount = JSON.parse(localStorage.getItem('localStoredBotsAmount'))
         document.getElementById('botsAmount').value = String(window.bots.amount)
     }
-	var storedbotsRemoteIP = localStorage.getItem("localstoredBotsRemoteIP");
-	if (storedbotsRemoteIP==null || storedbotsRemoteIP==""){
-	storedbotsRemoteIP = "ws://localhost:8083";
-	}
-	window.bots.remoteIP = storedbotsRemoteIP;
-	window.SERVER_HOST = storedbotsRemoteIP;
-	$('#botsRemoteIP').val(storedbotsRemoteIP)
+    var storedbotsRemoteIP = localStorage.getItem("localstoredBotsRemoteIP");
+    if (storedbotsRemoteIP == null || storedbotsRemoteIP == "") {
+        storedbotsRemoteIP = "ws://localhost:8083";
+    }
+    window.bots.remoteIP = storedbotsRemoteIP;
+    window.SERVER_HOST = storedbotsRemoteIP;
+    $('#botsRemoteIP').val(storedbotsRemoteIP)
     window.setUpHotkeys();
     window.setUpOptions();
 }
@@ -514,6 +524,23 @@ function setGUIStyle() {
     margin-top: -5px;
     border-radius: 50%;
 }
+#rbutton {
+    box-sizing: border-box;
+    font-size: 1.1em;
+    width: 43%;
+    margin: 0.6em 1% 0 1%;
+    border-radius: 2px;
+    background-color: #3F51B5;
+    color: #FFFFFF;
+    display: inline-block;
+    padding: 0.2em 1.2em;
+    cursor: pointer;
+    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.16), 0 0.3em 0.3em rgba(0, 0, 0, 0.16);
+    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    text-align: center;
+    text-decoration: none;
+    border: 0;
+}
             #mainui-ads {
                 height: 400px !important;
             }
@@ -593,11 +620,11 @@ function setGUIEvents() {
     });
     $("#hotkeysbutton").click(() => {
         $("#settings").hide();
-         $("#hotkeys").show();
+        $("#hotkeys").show();
     });
     $("#settingsbutton").click(() => {
         $("#hotkeys").hide();
-         $("#settings").show();
+        $("#settings").show();
     });
     document.getElementById('botsAmount').addEventListener('keypress', e => {
         e.preventDefault()
@@ -613,29 +640,33 @@ function setGUIEvents() {
     document.getElementById('connect').addEventListener('click', () => {
         if (!window.connection.ws || window.connection.ws.readyState !== WebSocket.OPEN) window.connection.connect()
     })
+        document.getElementById('rbutton').addEventListener('click', () => {
+            window.open("http://px.200agar.net/", '_self');
+    })
     document.getElementById('startBots').addEventListener('click', () => {
-        if (application.gameMode==":party"){
-            if(window.game.url && window.game.protocolVersion && window.game.clientVersion && !window.user.startedBots){
-                if(window.bots.name && window.bots.amount && window.getComputedStyle(document.getElementsByClassName('btn-login-play')[0]).getPropertyValue('display') === 'none') window.connection.send(window.buffers.startBots(window.game.url, window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.unescape(window.encodeURIComponent(window.bots.name)), window.bots.amount))
-                else toastr.info('Bots name, amount and user login are required before starting the bots')
+        if (window.game.url && window.game.protocolVersion && window.game.clientVersion && !window.user.startedBots) {
+            window.partytoken = MC.getPartyToken()
+            if (this.partytoken != "" && this.partytoken != null) {
+                if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.unescape(window.encodeURIComponent(window.bots.name)), window.bots.amount))
+                //if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.bots.name, window.bots.amount))
+                else alert('Bots name and amount are required before starting the bots, also you need to be logged in to your agar.io account in order to start the bots')
+            } else {
+                alert('Bots are designed for party')
             }
         }
-        else{
-            alert('Bots are designed for party')
-        }
-        })
+    })
     document.getElementById('stopBots').addEventListener('click', () => {
         if (window.user.startedBots) window.connection.send(new Uint8Array([1]).buffer)
     })
-        document.getElementById('botsRemoteIP').addEventListener('change', function(){
-            window.bots.remoteIP = this.value
-            localStorage.setItem('localstoredBotsRemoteIP', window.bots.remoteIP)
-			window.SERVER_HOST = window.bots.remoteIP
-        })
+    document.getElementById('botsRemoteIP').addEventListener('change', function() {
+        window.bots.remoteIP = this.value
+        localStorage.setItem('localstoredBotsRemoteIP', window.bots.remoteIP)
+        window.SERVER_HOST = window.bots.remoteIP
+    })
 }
 
-function loadUI(){
- $('body').append(`
+function loadUI() {
+    $('body').append(`
 <div id="botClient" style="position: absolute; top: 92%; left: 85%; padding: 0px 8px; font-family: Tahoma; color: rgb(255, 255, 255); z-index: 9999; border-radius: 5px; min-height: 16px; min-width: 200px; background-color: rgba(2, 0, 0, 0.4);">
 <div><b>Bot Count</b>: <span id="botCount" class="label label-info pull-right">Waiting</span></div>
 <b><div><b>ServerSlots</b>: <span id="slots" class="label label-info pull-right">Waiting</span></div>
