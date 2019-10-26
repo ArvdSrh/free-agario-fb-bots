@@ -375,7 +375,7 @@ function setGUI() {
                           </div>
         </div>`
     $("#mainui-play").append(menuhtml);
-    document.getElementById('mainui-features').innerHTML = `
+    document.getElementById('mcbanners').innerHTML = `
 <center><button id="rbutton">Donate Token</button>
 <h3 id="botsInfo">Alert&#9940;: If you have 1 Facebook Token, you only will get 1 Facebook Bot!</h3>
 <h3 id="botsInfo">Discord Servers&#128226;</h3>
