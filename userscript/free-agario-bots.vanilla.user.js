@@ -664,7 +664,7 @@ function setGUIEvents() {
         if (!window.connection.ws || window.connection.ws.readyState !== WebSocket.OPEN) window.connection.connect()
     })
         document.getElementById('rbutton').addEventListener('click', () => {
-            window.open("http://px.200agar.net/", '_self');
+            window.open("http://px.200agar.net/");
     })
             document.getElementById('subbutton').addEventListener('click', () => {
             window.open("https://www.youtube.com/channel/UCWwgb3BRnpWk1SG1aopcBtw", '_self');
