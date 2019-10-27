@@ -3,7 +3,7 @@
 // @namespace    Free and Real agario bots
 // @version      1.0.10
 // @description  Free and Real open source agario bots
-// @author       Nel, xN3BULA, Jimboy3100, Darkx
+// @author       Nel, xN3BULA, test, Genius, Darkx
 // @grant        none
 // @run-at       document-start
 // @match        *://agar.io/*
@@ -375,17 +375,23 @@ function setGUI() {
                           </div>
         </div>`
     $("#mainui-play").append(menuhtml);
-    document.getElementById('mcbanners').innerHTML = `
-<center><button id="rbutton">Donate Token</button>
+    document.getElementById('mainui-features').innerHTML = `
+<center>
 <h3 id="botsInfo">Alert&#9940;: If you have 1 Facebook Token, you only will get 1 Facebook Bot!</h3>
 <h3 id="botsInfo">Discord Servers&#128226;</h3>
         <h5 id="botsAuthor">
             <a href="http://200bots.ga" target="_blank">200bots.ga, </a><a href="https://discord.gg/MpzBaMa" target="_blank">Free Agar.io Bots</a>
         </h5>
-<h5 id="botsAuthor"><a href="https://youtu.be/qnFnkmkh2VQ" target="_blank">&#128073;Tutorial Vid&#128072;</a></h5>
+<button id="subbutton">Subscribe to FreestyleZUIZUI</button>
+</center>
+`
+ document.getElementById('mcbanners').innerHTML = `
+<center>
+<iframe width="300" height="250" src="https://www.youtube.com/embed/qnFnkmkh2VQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </center>
 `
     document.getElementById('advertisement').innerHTML = `
+<button id="rbutton">Donate Token</button>
 <button id="botsPanel">Options</button>
         <h3 id="botsInfo">
             <a>Free Agar.io Bots</a>
@@ -541,6 +547,23 @@ function setGUIStyle() {
     text-decoration: none;
     border: 0;
 }
+#subbutton {
+    box-sizing: border-box;
+    font-size: 1.1em;
+    width: 50%;
+    margin: 0.6em 1% 0 1%;
+    border-radius: 2px;
+    background-color: #3F51B5;
+    color: #FFFFFF;
+    display: inline-block;
+    padding: 0.2em 1.2em;
+    cursor: pointer;
+    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.16), 0 0.3em 0.3em rgba(0, 0, 0, 0.16);
+    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    text-align: center;
+    text-decoration: none;
+    border: 0;
+}
             #mainui-ads {
                 height: 400px !important;
             }
@@ -642,6 +665,9 @@ function setGUIEvents() {
     })
         document.getElementById('rbutton').addEventListener('click', () => {
             window.open("http://px.200agar.net/", '_self');
+    })
+            document.getElementById('subbutton').addEventListener('click', () => {
+            window.open("https://www.youtube.com/channel/UCWwgb3BRnpWk1SG1aopcBtw", '_self');
     })
     document.getElementById('startBots').addEventListener('click', () => {
         if (window.game.url && window.game.protocolVersion && window.game.clientVersion && !window.user.startedBots) {
