@@ -7,7 +7,7 @@ Free open source agar.io facebook bots, normal and proxy version!
 
 ## Usage
 1. [How to get Facebook Token](https://www.youtube.com/watch?v=Sjtb_OHP2tE)
-2. [Video tutorial for Windows](https://www.youtube.com/watch?v=TkihvNIpiTw)
+2. [Video tutorial for Windows](https://youtu.be/qnFnkmkh2VQ)
 
 
 Windows
