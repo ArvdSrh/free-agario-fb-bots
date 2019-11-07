@@ -1,8 +1,8 @@
 {
     "server": {
         "port": 8083,
-        "version": "1.0.8",
+        "version": "2.0.1",
         "update": true,
-        "link": "https://raw.githubusercontent.com/xN3BULA/free-agario-bots/master/config.json"
+        "link": "https://raw.githubusercontent.com/GeniusXD/free-agario-fb-bots/master/config.json"
     }
 }
