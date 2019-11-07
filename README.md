@@ -3,9 +3,9 @@ Free open source agar.io facebook bots, normal and proxy version!
 
 ## Change Log
 New version - v2.0.0
--Bypass recaptcha v3
--Updated FB files
--New vanila userscript - potion hack
+* Bypass recaptcha v3
+* Updated FB files
+* New vanila userscript - potion hack
 
 ## Discord
 1. [200bots.ga](http://200bots.ga)
