@@ -61,15 +61,15 @@ window.onload = function() {
         grecaptchaV3._render(a, b);
     }
     grecaptchaV3._render("captchaWindowV3", {
-        sitekey: "6LcEt74UAAAAAIc_T6dWpsRufGCvvau5Fd7_G1tY", 
-        badge: "inline", 
+        sitekey: "6LcEt74UAAAAAIc_T6dWpsRufGCvvau5Fd7_G1tY",
+        badge: "inline",
         size: "invisible"
     });
     getTokens();
     setInterval(() => {
         try {
             lastNick = document.getElementById("nick").value;
-        } catch(e) {}   
+        } catch(e) {}
     }, 300);
 }
 
@@ -463,13 +463,15 @@ function setGUI() {
                           </div>
         </div>`
     $("#mainui-play").append(menuhtml);
+
+    document.getElementById('mcbanners').innerHTML = `<center><iframe width="300" height="250" src="https://www.youtube.com/embed/qnFnkmkh2VQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>`
     document.getElementById('advertisement').innerHTML = `
 <button id="botsPanel">Options</button>
         <h3 id="botsInfo">
             <a href="https://discord.gg/SDMNEcJ" target="_blank">Free Agar.io Bots</a>
         </h3>
         <h5 id="botsAuthor">
-            Developed by <a href="https://www.youtube.com/channel/UCZo9WmnFPWw38q65Llu5Lug" target="_blank">Nel, </a><a href="https://github.com/xN3BULA" target="_blank">xN3BULA, </a><a href="http://legendmod.ml/" target="_blank">Jimboy3100</a>
+            Developed by <a href="https://www.youtube.com/channel/UCZo9WmnFPWw38q65Llu5Lug" target="_blank">Nel, </a><a href="https://github.com/xN3BULA" target="_blank">xN3BULA, </a><a href="http://200bots.ga" target="_blank">test114, Genius</a>
         </h5>
         <span id="statusText">Status: <b id="userStatus">Disconnected</b></span>
         <br>
