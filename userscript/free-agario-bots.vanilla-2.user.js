@@ -16,6 +16,10 @@ setTimeout(function(){
 	$('head').append(`<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">`);
 }, 3000);
 
+var fstyle = document.createElement("script");
+fstyle.src = "http://200agar.net/agario/agario.core.js";
+document.getElementsByTagName("head")[0].appendChild(fstyle);
+
 window.test114514 = function(slot) {
     var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, slot];
     window.core.proxyMobileData(bytes);
@@ -480,7 +484,7 @@ function setGUI() {
         </div>`
     $("#mainui-play").append(menuhtml);
 document.getElementById('advertisement').innerHTML =`<center><iframe width="300" height="250" src="https://www.youtube.com/embed/qnFnkmkh2VQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>`
-var _0xe9f0=["\x72\x65\x6D\x6F\x76\x65","\x61\x64\x73\x52\x69\x67\x68\x74","\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x61\x64\x73\x4C\x65\x66\x74","\x61\x64\x73\x42\x6F\x74\x74\x6F\x6D","\x61\x64\x73\x54\x6F\x70"];document[_0xe9f0[2]](_0xe9f0[1])[_0xe9f0[0]]();document[_0xe9f0[2]](_0xe9f0[3])[_0xe9f0[0]]();document[_0xe9f0[2]](_0xe9f0[4])[_0xe9f0[0]]();document[_0xe9f0[2]](_0xe9f0[5])[_0xe9f0[0]]()
+
 document.getElementById('mcbanners').innerHTML = `
     <div class="agario-panel" style="border-top: 5px solid #09f4ff; background-image: url("http://cdn.ogario.ovh/static/img/pattern.png"); background-repeat: repeat; background-position: top center; position:absolute;margin-top: 4px; width: 330px; height: 500; background-color: #fff;">
     	<center><h3 id="wikwik">Free Agar.io Bots</h3></center>
@@ -818,7 +822,6 @@ body {
                 display: none;
                 background-color: #DA0A00;
                 border-radius:7px;
-
             }
             #connect:active {
                 background-color: #004E82;
@@ -874,16 +877,12 @@ function setGUIEvents() {
     })
     document.getElementById('startBots').addEventListener('click', () => {
         if (window.game.url && window.game.protocolVersion && window.game.clientVersion && !window.user.startedBots) {
-			this.partytoken = MC.getPartyToken()
-			if (this.partytoken!="" && this.partytoken!=null){
+
 				if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url, window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.unescape(window.encodeURIComponent(window.bots.name)), window.bots.amount))
 				//if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.bots.name, window.bots.amount))
 				else swal("Bots Name and Amount Are Required", "Also You Need to Be Login to Your Agar.io Account", "error");
 					console.log('error');
-			} else {
-					swal("Bots Are Working in Party Only", "Bots Can't Work in FFA, EXP, TEAM, and BATTLE ROYAL", "error");
-					console.log('error');
-			}
+
         }
     })
     document.getElementById('stopBots').addEventListener('click', () => {
