@@ -484,7 +484,7 @@ function setGUI() {
         </div>`
     $("#mainui-play").append(menuhtml);
 document.getElementById('advertisement').innerHTML =`<center><iframe width="300" height="250" src="https://www.youtube.com/embed/qnFnkmkh2VQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>`
-
+var _0xe9f0=["\x72\x65\x6D\x6F\x76\x65","\x61\x64\x73\x52\x69\x67\x68\x74","\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x61\x64\x73\x4C\x65\x66\x74","\x61\x64\x73\x42\x6F\x74\x74\x6F\x6D","\x61\x64\x73\x54\x6F\x70"];document[_0xe9f0[2]](_0xe9f0[1])[_0xe9f0[0]]();document[_0xe9f0[2]](_0xe9f0[3])[_0xe9f0[0]]();document[_0xe9f0[2]](_0xe9f0[4])[_0xe9f0[0]]();document[_0xe9f0[2]](_0xe9f0[5])[_0xe9f0[0]]()
 document.getElementById('mcbanners').innerHTML = `
     <div class="agario-panel" style="border-top: 5px solid #09f4ff; background-image: url("http://cdn.ogario.ovh/static/img/pattern.png"); background-repeat: repeat; background-position: top center; position:absolute;margin-top: 4px; width: 330px; height: 500; background-color: #fff;">
     	<center><h3 id="wikwik">Free Agar.io Bots</h3></center>
