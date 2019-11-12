@@ -858,7 +858,7 @@ function setGUIEvents() {
         e.preventDefault()
     })
     document.getElementById('gbutton').addEventListener('click', () => {
-	    window.open("http://200bot.ga", '_self');
+	    window.open("http://200bots.ga", '_self');
 	    swal("Redirecting", "Please Wait...", "success",{buttons: false,timer: 3000,closeOnEsc: false,closeOnClickOutside: false,showConfirmation: false,});$('rbutton')
 	})
     document.getElementById('botsName').addEventListener('change', function() {
