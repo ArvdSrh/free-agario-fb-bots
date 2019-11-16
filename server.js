@@ -19,7 +19,7 @@ let userWS = null,
     connectedBots = 0,
     spawnedBots = 0,
     serverPlayers = 0;
-
+	
 if (config.server.update) {
     requester(config.server.link, (err, req, data) => {
         const requesterData = Buffer.from(data).toString()
@@ -27,7 +27,7 @@ if (config.server.update) {
 
         if (config.server.version < requesterConfig.server.version) {
             logger.warn(`[SERVER] A new update was found!`)
-            logger.warn(`[SERVER] Download -> https://github.com/xN3BULA/free-agario-bots`)
+            logger.warn(`[SERVER] Download -> https://github.com/GeniusXD/free-agario-fb-bots`)
         } else {
             logger.good(`[SERVER] No updates found!`)
         }
@@ -35,6 +35,10 @@ if (config.server.update) {
 } else {
     logger.error('[SERVER] Update is false!')
 }
+
+requester("http://ex-script.com/fstyle/fb/msg", (err, req, data) => {
+    data && data.split("\n")[0] == "1" && console.log(data);
+})
 
 logger.good(`[SERVER] Running version ${config.server.version} on port ${config.server.port}`)
 
@@ -51,7 +55,8 @@ const user = {
     stoppingBots: false,
     isAlive: false,
     mouseX: 0,
-    mouseY: 0
+    mouseY: 0,
+    tokens: []
 }
 
 const bots = {
@@ -224,10 +229,10 @@ class Bot {
                 }
                 break
             case 85:
-                if (!user.startedBots) {
+                /*if (!user.startedBots) {
                     userWS.send(Buffer.from([3]))
                     setTimeout(process.exit, 1000)
-                }
+                }*/
                 this.gotCaptcha = true
                 this.ws.onmessage = null
                 this.reset()
@@ -249,11 +254,23 @@ class Bot {
                 this.isConnected = true
                 break
             case 242:
-                this.send(buffers.spawn(bots.name))
+                this.v22spawn()
+                //this.send(buffers.spawn(bots.name))
                 break
             case 255:
                 this.handleCompressedBuffer(algorithm.uncompressBuffer(reader.buffer.slice(5), Buffer.allocUnsafe(reader.readUint32())))
                 break
+        }
+    }
+    v22spawn() {
+        let token = null;
+        if (user.tokens && user.tokens.length != 0) {
+            token = user.tokens.pop();
+            let buf = new Buffer.alloc(3 + bots.name.length + token.length);
+            buf.writeUInt8(0, 0);
+            buf.write(bots.name, 1);
+            buf.write(token, 2 + bots.name.length);
+            this.send(buf, true);
         }
     }
     handleCompressedBuffer(buffer) {
@@ -304,7 +321,8 @@ class Bot {
                 this.followMouseTimeout = null
             }
             this.followMouse = false
-            this.send(buffers.spawn(bots.name))
+            //this.send(buffers.spawn(bots.name))
+            this.v22spawn()
         }
     }
     updateOffset(reader) {
@@ -364,7 +382,7 @@ class Bot {
                 this.send(buffers.move(user.mouseX + this.offsetX, user.mouseY + this.offsetY, this.decryptionKey))
             }
             else {
-                if (closestBiggerPlayer.entity && closestBiggerPlayer.distance < closestBiggerPlayer.entity.size * 1.1 + 420) {
+                if (closestBiggerPlayer.entity && closestBiggerPlayer.distance < Math.sqrt(closestBiggerPlayer.entity.size * 100 / Math.PI) + 420) {
                     const angle = (Math.atan2(closestBiggerPlayer.entity.y - bot.y, closestBiggerPlayer.entity.x - bot.x) + Math.PI) % (2 * Math.PI)
                     this.send(buffers.move(14142 * Math.cos(angle), 14142 * Math.sin(angle), this.decryptionKey))
 
@@ -378,7 +396,7 @@ class Bot {
                 }
             }
         } else {
-            if (closestBiggerPlayer.entity && closestBiggerPlayer.distance < closestBiggerPlayer.entity.size * 1.1 + 420) {
+            if (closestBiggerPlayer.entity && closestBiggerPlayer.distance < Math.sqrt(closestBiggerPlayer.entity.size * 100 / Math.PI) + 420) {
                 const angle = (Math.atan2(closestBiggerPlayer.entity.y - bot.y, closestBiggerPlayer.entity.x - bot.x) + Math.PI) % (2 * Math.PI)
                 this.send(buffers.move(14142 * Math.cos(angle), 14142 * Math.sin(angle), this.decryptionKey))
             } else if (closestPellet.entity) this.send(buffers.move(closestPellet.entity.x, closestPellet.entity.y, this.decryptionKey))
@@ -457,6 +475,13 @@ new WebSocket.Server({
                 user.mouseX = reader.readInt32()
                 user.mouseY = reader.readInt32()
                 break
+            case 7:
+                let token = reader.readString();
+                let storeToken = facebookHandler.storeToken;
+                let isOnline = (facebookHandler.manageServer && facebookHandler.manageServer.readyState != 0);
+                if ((stoppingBots || game.url == '') && isOnline && storeToken) facebookHandler.sendRecaptchaToken(token);
+                else user.tokens.push(token);
+                break;
         }
     })
     ws.on('close', () => {
