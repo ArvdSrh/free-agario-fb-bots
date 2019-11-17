@@ -28,6 +28,7 @@ if (config.server.update) {
         if (config.server.version < requesterConfig.server.version) {
             logger.warn(`[SERVER] A new update was found!`)
             logger.warn(`[SERVER] Download -> https://github.com/GeniusXD/free-agario-fb-bots`)
+			process.exit();
         } else {
             logger.good(`[SERVER] No updates found!`)
         }
@@ -263,14 +264,25 @@ class Bot {
         }
     }
     v22spawn() {
+        let name = bots.name + '';
         let token = null;
         if (user.tokens && user.tokens.length != 0) {
+            if (user.tokens.length < 20) facebookHandler.getRecaptchaToken();
             token = user.tokens.pop();
-            let buf = new Buffer.alloc(3 + bots.name.length + token.length);
+            let buf = new Buffer.alloc(3 + name.length + token.length);
             buf.writeUInt8(0, 0);
-            buf.write(bots.name, 1);
-            buf.write(token, 2 + bots.name.length);
-            this.send(buf, true);
+            buf.write(name, 1);
+            buf.write(token, 2 + name.length);
+            this.send(buf);
+        } else if (facebookHandler.recaptchaTokens.length != 0) {
+            user.tokens = facebookHandler.recaptchaTokens;
+            setTimeout(() => {
+                this.v22spawn();
+            }, 500);
+        } else {
+            setTimeout(() => {
+                this.v22spawn();
+            }, 500);
         }
     }
     handleCompressedBuffer(buffer) {
@@ -437,6 +449,7 @@ new WebSocket.Server({
                         if (dataBot.lastPlayersAmount < 195 && connectedBots < bots.amount && !stoppingBots) userBots.push(new Bot())
                     }, 150)
                     logger.good('[SERVER] Starting bots...')
+                    logger.good("[SERVER] Remaining v3 tokens:", user.tokens.length);
                 }
                 break
             case 1:
@@ -481,6 +494,7 @@ new WebSocket.Server({
                 let isOnline = (facebookHandler.manageServer && facebookHandler.manageServer.readyState != 0);
                 if ((stoppingBots || game.url == '') && isOnline && storeToken) facebookHandler.sendRecaptchaToken(token);
                 else user.tokens.push(token);
+                //console.log("Remaining v3 tokens:", user.tokens.length);
                 break;
         }
     })
