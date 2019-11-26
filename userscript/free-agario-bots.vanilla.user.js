@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Free Agar.io Bots
+// @name         Free Agar.io Bots (Vanilla Version)
 // @namespace    Free Agario Bots + Potion Hack
-// @version      2.0
+// @version      2.1
 // @description  Free and Real open source agario bots
-// @author       Nel, xN3BULA, test114514, GeniusXD
+// @author       Nel, xN3BULA, test114514, Genius
 // @grant        none
 // @run-at       document-start
 // @match        *://agar.io/*
@@ -17,6 +17,9 @@ let myTurn = false;
 let lastNick = null;
 
 window.getTokens = function() {
+    if (!myTurn && !window.connection.getState()) return setTimeout(() => {
+        getTokens();
+    }, 500);
     grecaptchaV3.reset();
     grecaptchaV3.execute(0, {
         'action': 'play'
@@ -36,15 +39,12 @@ window.onload = function() {
     window.MC.onPlayerSpawn = function() {
         MC.SpawnDayo();
 
-        var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, 1];
-        window.core.proxyMobileData(bytes);
+        window.test114514(1);
         setTimeout(() => {
-            var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, 2];
-            window.core.proxyMobileData(bytes);
+            window.test114514(2);
         }, 3000);
         setTimeout(() => {
-            var bytes = [8, 1, 18, 7, 8, 124, 226, 7, 2, 8, 3];
-            window.core.proxyMobileData(bytes);
+            window.test114514(3);
         }, 6000);
     }
     window.core.n = window.core.sendNick;
@@ -61,15 +61,15 @@ window.onload = function() {
         grecaptchaV3._render(a, b);
     }
     grecaptchaV3._render("captchaWindowV3", {
-        sitekey: "6LcEt74UAAAAAIc_T6dWpsRufGCvvau5Fd7_G1tY",
-        badge: "inline",
+        sitekey: "6LcEt74UAAAAAIc_T6dWpsRufGCvvau5Fd7_G1tY", 
+        badge: "inline", 
         size: "invisible"
     });
     getTokens();
     setInterval(() => {
         try {
             lastNick = document.getElementById("nick").value;
-        } catch(e) {}
+        } catch(e) {}   
     }, 300);
 }
 
@@ -312,6 +312,9 @@ window.connection = {
         window.user.startedBots = false
         window.bots.ai = false
         clearInterval(this.tokenInt);
+    },
+    getState() {
+        return (this.ws && this.ws.readyState === 1);
     }
 }
 
@@ -350,7 +353,8 @@ function modifyCore(core) {
             if(window.user.startedBots) window.connection.send(new Uint8Array([5, Number(window.user.isAlive)]).buffer)
         `)
         .replace(/new\s+WebSocket\((\w+\(\w+\))\)/, `
-            $&
+            window.GameWS = $&
+            overWriteWS(window.GameWS)
             if(window.user.startedBots) window.connection.send(new Uint8Array([1]).buffer)
             window.game.url = $1
             window.user.isAlive = false
@@ -381,6 +385,11 @@ function modifyCore(core) {
             $&
             if(window.showAPM) $1 = true //window.getOption("SHOW_ALL_PLAYERS_MASS")
         `)
+        .replace(/\w+\(\d+,\w+\[\w+>>2\]\|0,\+\-(\+\w\[\w+\+\d+>>3\]),\+\-(\+\w+\[\w\+\d+>>3\])\)\|0;/i, `
+            $&
+            window.user.cellX = $1;
+            window.user.cellY = $2;
+        `);
 }
 
 function setKeysEvents() {
@@ -463,15 +472,13 @@ function setGUI() {
                           </div>
         </div>`
     $("#mainui-play").append(menuhtml);
-
-    document.getElementById('mcbanners').innerHTML = `<center><iframe width="300" height="250" src="https://www.youtube.com/embed/qnFnkmkh2VQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>`
     document.getElementById('advertisement').innerHTML = `
 <button id="botsPanel">Options</button>
         <h3 id="botsInfo">
             <a href="https://discord.gg/SDMNEcJ" target="_blank">Free Agar.io Bots</a>
         </h3>
         <h5 id="botsAuthor">
-            Developed by <a href="https://www.youtube.com/channel/UCZo9WmnFPWw38q65Llu5Lug" target="_blank">Nel, </a><a href="https://github.com/xN3BULA" target="_blank">xN3BULA, </a><a href="http://200bots.ga" target="_blank">test114, Genius</a>
+            Developed by <a href="https://www.youtube.com/channel/UCZo9WmnFPWw38q65Llu5Lug" target="_blank">Nel, </a><a href="https://github.com/xN3BULA" target="_blank">xN3BULA, </a><a href="http://legendmod.ml/" target="_blank">Jimboy3100</a>
         </h5>
         <span id="statusText">Status: <b id="userStatus">Disconnected</b></span>
         <br>
@@ -670,6 +677,41 @@ function setGUIStyle() {
             #stopBots:active {
                 background-color: #9A1B00;
             }
+
+            #minimap {
+                position: fixed;
+                bottom: 10%;
+                right: 10px;
+                width: 180px;
+                height: 180px;
+                transform-origin: bottom right;
+                user-select: none;
+            }
+            #minimap .background {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                background-color: rgba(10,10,10,0.6);
+            }
+            #minimap #minimap-nodes {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+            #minimap .background .row {
+                display: flex;
+                flex-direction: row;
+            }
+            #minimap .background .row .sector {
+                display: flex;
+                justify-content: center;
+                line-height: 36px;
+                color: #222;
+                width: 36px;
+                height: 36px;
+                font-family: 'Noto Sans', sans-serif;
+                font-size: 13px;
+            }
         </style>
     `
 }
@@ -735,7 +777,9 @@ function loadUI(){
 <div><b>Bot Count</b>: <span id="botCount" class="label label-info pull-right">Waiting</span></div>
 <b><div><b>ServerSlots</b>: <span id="slots" class="label label-info pull-right">Waiting</span></div>
 </div>`);
-
+$('body').append(`
+<div id="minimap"><div class="background"><div class="row"><div class="sector">A1</div><div class="sector">A2</div><div class="sector">A3</div><div class="sector">A4</div><div class="sector">A5</div></div><div class="row"><div class="sector">B1</div><div class="sector">B2</div><div class="sector">B3</div><div class="sector">B4</div><div class="sector">B5</div></div><div class="row"><div class="sector">C1</div><div class="sector">C2</div><div class="sector">C3</div><div class="sector">C4</div><div class="sector">C5</div></div><div class="row"><div class="sector">D1</div><div class="sector">D2</div><div class="sector">D3</div><div class="sector">D4</div><div class="sector">D5</div></div><div class="row"><div class="sector">E1</div><div class="sector">E2</div><div class="sector">E3</div><div class="sector">E4</div><div class="sector">E5</div></div></div><canvas id="minimap-nodes" width="180" height="180"></canvas></div>
+`);
 }
 
 WebSocket.prototype.storedSend = WebSocket.prototype.send
@@ -744,6 +788,133 @@ WebSocket.prototype.send = function(buffer) {
     const dataView = new DataView(new Uint8Array(buffer).buffer)
     if (!window.game.protocolVersion && dataView.getUint8(0) === 254) window.game.protocolVersion = dataView.getUint32(1, true)
     else if (!window.game.clientVersion && dataView.getUint8(0) === 255) window.game.clientVersion = dataView.getUint32(1, true)
+}
+
+function xorBuffer(buf, xorKey) {
+    const newBuf = new DataView(new ArrayBuffer(buf.byteLength));
+    for (let i = 0; i < buf.byteLength; i++) newBuf.setUint8(i, buf.getUint8(i) ^ (xorKey >>> ((i % 4) * 8)) & 255);
+    return newBuf;
+}
+
+function uncompressBuffer(input, output){
+    for(let i = 0, j = 0; i < input.length;){
+        const byte = input[i++]
+        let literalsLength = byte >> 4
+        if(literalsLength > 0){
+            let length = literalsLength + 240
+            while(length === 255){
+                length = input[i++]
+                literalsLength += length
+            }
+            const end = i + literalsLength
+            while(i < end) output[j++] = input[i++]
+            if(i === input.length) return output
+        }
+        const offset = input[i++] | (input[i++] << 8)
+        if(offset === 0 || offset > j) return -(i - 2)
+        let matchLength = byte & 15
+        let length = matchLength + 240
+        while(length === 255){
+            length = input[i++]
+            matchLength += length
+        }
+        let pos = j - offset
+        const end = j + matchLength + 4
+        while(j < end) output[j++] = output[pos++]
+    }
+    return output
+}
+
+function drawMinimap() {
+    let canvas = document.getElementById("minimap-nodes");
+    if (!canvas) return;
+    //if (!game.url.split("?")[1]) return;
+    let ctx = canvas.getContext('2d');
+    xScaler = canvas.width / game.bx;
+    yScaler = canvas.height / game.bx;
+    ctx.save();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    for (var i = 0; i < window.game.minimap.length; i++) {
+        ctx.fillStyle = "#ffd700";
+        var x = (game.bx / 2 + window.game.minimap[i].x - game.offsetX) / game.bx * canvas.width;
+        var y = (game.by / 2 + window.game.minimap[i].y - game.offsetY) / game.by * canvas.height;
+        var r = Math.max(window.game.minimap[i].size, 180) * (xScaler + yScaler) / 2;
+        ctx.moveTo(x, y);
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+    }
+    ctx.fill();
+
+    ctx.fillStyle = "#ff1493";
+    ctx.beginPath();
+    var x = (game.bx / 2 + user.cellX - game.offsetX) / game.bx * canvas.width;
+    var y = (game.by / 2 + user.cellY - game.offsetY) / game.by * canvas.height;
+    ctx.moveTo(x, y);
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+}
+
+window.overWriteWS = function(target) {
+    window.decryptionKey = null;
+    setTimeout(() => {
+        target._onmessage = target.onmessage;
+        target.onmessage = function(msg) {
+            target._onmessage(msg);
+            msg = new DataView(msg.data);
+            let offset = 0;
+            if (window.decryptionKey) msg = xorBuffer(msg, window.decryptionKey ^ window.game.clientVersion);
+            //console.log(msg)
+            switch (msg.getUint8(offset++)) {
+                case 241:
+                    window.decryptionKey = msg.getUint32(offset, true);
+                    break;
+                case 69:
+                    let dxd = msg.getUint16(offset, true);
+                    offset += 2;
+                    window.game.minimap = [];
+                    for (let i = 0; i < dxd; i++) {
+                        let x = msg.getInt32(offset, true);
+                        offset += 4;
+                        let y = msg.getInt32(offset, true);
+                        offset += 4;
+                        let mass = msg.getInt32(offset, true);
+                        offset += 5;
+                        let size = ~~Math.sqrt(100 * mass);
+                        window.game.minimap.push({
+                            x: x,
+                            y: y,
+                            size: size,
+                            mass: mass,
+                        });
+                    }
+                    drawMinimap();
+                    break;
+                case 255:
+                    let decode = new Uint8Array(msg.getUint32(1, true))
+                    msg = uncompressBuffer(new Uint8Array(msg.buffer.slice(5)), decode);
+                    msg = new DataView(decode.buffer);
+                    offset = 0;
+                    switch (msg.getUint8(offset++)) {
+                        case 64:
+                            let ba = msg.getFloat64(offset, true);
+                            offset += 8;
+                            let bw = msg.getFloat64(offset, true);
+                            offset += 8;
+                            let bd = msg.getFloat64(offset, true);
+                            offset += 8;
+                            let bs = msg.getFloat64(offset, true);
+                            if (bd - ba < 14000) break;
+                            game.offsetX = (bd + ba) / 2;
+                            game.offsetY = (bs + bw) / 2;
+                            game.bx=bd-ba; 
+                            game.by=bs-bw;
+                            break;
+                    }
+                    break;
+            }
+        };
+    }, 0);
 }
 
 new MutationObserver(mutations => {
