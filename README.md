@@ -4,7 +4,7 @@ Free open source agar.io facebook bots, normal and proxy version!
 ## Change Log
 New version - v2.0.0
 * Bypass recaptcha v3 [but u will still get captcha]
-* FB doesn't work --- join discord server for more info
+* FB doesn't work [join discord server for more info]
 
 ## Discord
 1. [200bots.ga](http://200bots.ga)
