@@ -17,6 +17,6 @@
         "request": "^2.88.0",
         "request-promise": "^4.2.4",
         "socks-proxy-agent": "^4.0.2",
-        "ws": "^7.1.2"
+        "ws": "^7.4.6"
     }
 }
