@@ -7,7 +7,7 @@ New version - v2.0.0
 * FB doesn't work anymore [join discord server for more info]
 
 ## Discord
-1. [200bots.ga](http://200bots.ga)
+1. Genius#8660
 
 ## Usage
 1. [How to get Facebook Token](https://www.youtube.com/watch?v=Sjtb_OHP2tE)
